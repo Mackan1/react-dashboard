@@ -1,0 +1,71 @@
+.contactFormCard {
+  width: 30vw;
+  min-width: 500px;
+  background-color: white;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.contactFormTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.contactFormTitle h3 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.contactFormTitle p {
+  font-size: 15px;
+}
+
+.nameBox input {
+  font-size: 1rem;
+  padding: 6px 12px;
+  width: 350px;
+  height: 40px;
+  border: 1px solid black;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+}
+
+.emailBox input {
+  font-size: 1rem;
+  padding: 6px 12px;
+  width: 350px;
+  height: 40px;
+  border: 1px solid black;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+}
+
+.messageBox textarea {
+  margin-bottom: 1rem;
+  border: 1px solid black;
+  font-size: 1rem;
+  padding: 6px 12px;
+  width: 350px;
+  height: 150px;
+  border-radius: 1rem;
+  resize: none;
+}
+
+.submitBox input {
+  font-size: 1rem;
+  width: 150px;
+  height: 40px;
+  border: none;
+  border-radius: 1rem;
+  background: rgb(29, 33, 80);
+  font-weight: bold;
+  color: #fff;
+}
+
+.submitBox {
+  text-align: center;
+}

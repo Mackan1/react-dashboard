@@ -1,0 +1,16 @@
+.floshipPieChart {
+  width: 500px;
+  height: 450px;
+  background-color: white;
+  border-radius: 2rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.pieChartTitle {
+  text-align: center;
+  font-size: 25px;
+}
