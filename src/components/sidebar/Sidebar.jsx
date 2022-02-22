@@ -17,7 +17,7 @@ function Sidebar() {
             <h3>Logistics</h3>
             <ul className="sidebarList">
               <li className="sidebarListItem active">
-                <LocalShippingIcon className="sidebarIcon" /> NG
+                <LocalShippingIcon className="sidebarIcon" /> NG Floship
               </li>
               <li className="sidebarListItem">
                 <QuestionMarkIcon className="sidebarIcon" /> Coming soon
@@ -33,7 +33,7 @@ function Sidebar() {
         </div>
         <div className="sidebarMenu">
           <div className="sidebarTitle">
-            <h3>Finance</h3>
+            <h3>Coming soon</h3>
             <ul className="sidebarList">
               <li className="sidebarListItem">
                 <QuestionMarkIcon className="sidebarIcon" /> Coming soon
