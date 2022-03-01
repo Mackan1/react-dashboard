@@ -1,43 +1,75 @@
 import "./floshipPieChart.css";
 import { PieChart, Pie, Cell } from "recharts";
+import axios from 'axios';
+import React, {useState} from 'react' 
 
-const data = [
-  { name: "Floship", value: 20.9 },
-  { name: "Other", value: 79.1 },
-];
 
-const COLORS = ["#1d2150", "#c2003a"];
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: any) => {
-  // eslint-disable-next-line
-  const radius = 35 + innerRadius + (outerRadius - innerRadius);
-  // eslint-disable-next-line
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  // eslint-disable-next-line
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="black"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(1)}% - ${data[index].name}`}
-    </text>
-  );
-};
+
+
 function FloshipPieChart() {
+
+  const [floship, setFloship] = useState(0);
+  const [link, setLink] = useState(0);
+
+  const getFloshipData = async () => {
+  await axios.get('http://localhost:4000/onlyFloship')
+      .then((res) => {
+        let orderData = res.data
+        setFloship(orderData.length)
+    })
+  }
+  const getLinkData = async () => {
+  await axios.get('http://localhost:4000/notFloship')
+      .then((res) => {
+        let orderData = res.data
+        setLink(orderData.length)
+    })
+  }
+
+  getFloshipData()
+  getLinkData()
+
+  const data = [
+    { name: "Floship", value: floship},
+    { name: "Link", value: link },
+  ];
+
+  
+  const COLORS = ["#1d2150", "#c2003a"];
+
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({
+      cx,
+      cy,
+      midAngle,
+      innerRadius,
+      outerRadius,
+      percent,
+      index,
+    }: any) => {
+      // eslint-disable-next-line
+      const radius = 35 + innerRadius + (outerRadius - innerRadius);
+      // eslint-disable-next-line
+      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+      // eslint-disable-next-line
+      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+      return (
+        <text
+          x={x}
+          y={y}
+          fill="black"
+          textAnchor={x > cx ? "start" : "end"}
+          dominantBaseline="central"
+        >
+          {`${(percent * 100).toFixed(1)}% - ${data[index].name}`}
+        </text>
+      );
+    };
+  
+
   return (
     <div className="floshipPieChart">
       <div className="pieChartTitle">

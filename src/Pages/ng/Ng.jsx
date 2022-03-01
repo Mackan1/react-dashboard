@@ -1,5 +1,4 @@
 import FloshipPieChart from "../../components/floshipPieChart/FloshipPieChart";
-import axios from 'axios';
 import "./ng.css";
 
 function Ng() {
