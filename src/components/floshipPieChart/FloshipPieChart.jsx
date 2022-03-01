@@ -1,18 +1,15 @@
 import "./floshipPieChart.css";
 import { PieChart, Pie, Cell } from "recharts";
 import axios from 'axios';
-import React, {useState} from 'react' 
-
-
-
+import React, {useState} from 'react'
 
 
 
 function FloshipPieChart() {
-
   const [floship, setFloship] = useState(0);
   const [link, setLink] = useState(0);
 
+  
   const getFloshipData = async () => {
   await axios.get('http://localhost:4000/onlyFloship')
       .then((res) => {
@@ -30,7 +27,7 @@ function FloshipPieChart() {
 
   getFloshipData()
   getLinkData()
-
+  
   const data = [
     { name: "Floship", value: floship},
     { name: "Link", value: link },
