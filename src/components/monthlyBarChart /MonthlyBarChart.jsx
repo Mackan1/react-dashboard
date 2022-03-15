@@ -73,7 +73,7 @@ async function getMonthData(startDate, endDate){
     total = monthData.data[0].value + monthData.data[1].value
     monthdataFloship = monthData.data[0].value / total
     monthdataLink = monthData.data[1].value / total
-    return [Math.round((monthData.data[0].value/total)*100), Math.round((monthData.data[1].value/total)*100)]
+    return [Math.round((monthdataFloship)*100), Math.round((monthdataLink)*100)]
   }
   else{
     return [0,0]

@@ -69,8 +69,18 @@ const data = [
 
 async function getWeekData(startDate, endDate){
   const weekData = await getDataFiltered(endDate, startDate)
-  const total = weekData.data[0].value + weekData.data[1].value
-  return [Math.round((weekData.data[0].value/total)*100), Math.round((weekData.data[1].value/total)*100)]
+  if(weekData && weekData.data && weekData.data.length > 1){
+    let total = 0
+    let weekDataFloship = 0
+    let weekDataLink = 0
+    total = weekData.data[0].value + weekData.data[1].value
+    weekDataFloship = weekData.data[0].value / total
+    weekDataLink = weekData.data[1].value / total
+    return [Math.round((weekDataFloship)*100), Math.round((weekDataLink)*100)]
+  }
+  else{
+    return [0,0]
+  }
 }
 
 function weeks(number){
