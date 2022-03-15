@@ -1,5 +1,8 @@
 .ng {
-  flex: 4;
+  display: flex;
+  /* flex-basis: 90%; */
+  flex-wrap: wrap;
+  justify-content: center;
   background-color: #f8f8f8;
-  padding: 50px;
+  /* padding: 10px 20px; */
 }

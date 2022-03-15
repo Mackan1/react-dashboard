@@ -38,7 +38,7 @@ function ContactForm() {
           <input
             type="submit"
             name="btnSubmit"
-            class="btnContact"
+            className="btnContact"
             value="Submit Issue"
           />
         </div>

@@ -1,0 +1,21 @@
+.skuTableBox {
+  width: 1000px;
+  margin: 20px 10px;
+  height: 600px;
+  background-color: white;
+  border-radius: 2rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.download {
+  margin-bottom: 4px;
+  text-decoration: underline;
+  color:#555;
+  font-size:12px;
+  font-weight:lighter;
+  cursor: pointer;
+}

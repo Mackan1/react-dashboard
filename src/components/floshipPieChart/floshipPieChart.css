@@ -1,6 +1,7 @@
 .floshipPieChart {
-  width: 500px;
-  height: 450px;
+  width: 650px;
+  margin: 20px 10px;
+  height: 500px;
   background-color: white;
   border-radius: 2rem;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -8,9 +9,31 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+}
+
+@media screen and (min-width: 1450px) {
+  .floshipPieChart {
+    min-width: 550px;
+    width: 45%;
+  }
 }
 
 .pieChartTitle {
+  position: relative;
+  bottom: -40px;
   text-align: center;
-  font-size: 25px;
+}
+
+
+.pieChartTitle p:nth-child(2){
+  margin: 4px;
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.pieChartTitle p:nth-child(3){
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: lighter;
 }
