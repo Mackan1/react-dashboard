@@ -65,8 +65,19 @@ const data = [
 
 async function getMonthData(startDate, endDate){
   const monthData = await getDataFiltered(endDate, startDate)
-  const total = monthData.data[0].value + monthData.data[1].value
-  return [Math.round((monthData.data[0].value/total)*100), Math.round((monthData.data[1].value/total)*100)]
+  console.log(monthData)
+  let total = 0
+  let monthdataFloship = 0
+  let monthdataLink = 0
+  if(monthData && monthData.data && monthData.data.length > 1){
+    total = monthData.data[0].value + monthData.data[1].value
+    monthdataFloship = monthData.data[0].value / total
+    monthdataLink = monthData.data[1].value / total
+    return [Math.round((monthData.data[0].value/total)*100), Math.round((monthData.data[1].value/total)*100)]
+  }
+  else{
+    return [0,0]
+  }
 }
 
 function months(number){
@@ -90,33 +101,33 @@ export default function MonthBarChart() {
         [
         {
           name: `Month ${getMonth(subMonths(todaysDate, 6))+1}`,
+          Floship: values[0][0],
+          Link: values[0][1],
+        },
+        {
+          name: `Month ${getMonth(subMonths(todaysDate, 5))+1}`,
           Floship: values[1][0],
           Link: values[1][1],
         },
         {
-          name: `Month ${getMonth(subMonths(todaysDate, 5))+1}`,
+          name: `Month ${getMonth(subMonths(todaysDate, 4))+1}`,
           Floship: values[2][0],
           Link: values[2][1],
         },
         {
-          name: `Month ${getMonth(subMonths(todaysDate, 4))+1}`,
+          name: `Month ${getMonth(subMonths(todaysDate, 3))+1}`,
           Floship: values[3][0],
           Link: values[3][1],
         },
         {
-          name: `Month ${getMonth(subMonths(todaysDate, 3))+1}`,
+          name: `Month ${getMonth(subMonths(todaysDate, 2))+1}`,
           Floship: values[4][0],
           Link: values[4][1],
         },
         {
-          name: `Month ${getMonth(subMonths(todaysDate, 2))+1}`,
+          name: `Month ${getMonth(subMonths(todaysDate, 1))+1}`,
           Floship: values[5][0],
           Link: values[5][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 1))+1}`,
-          Floship: values[6][0],
-          Link: values[6][1],
         }
         ]
       )
