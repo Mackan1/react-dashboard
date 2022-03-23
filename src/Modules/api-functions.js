@@ -91,7 +91,7 @@ export class API {
     }
 }
 
-const api = new API('http://localhost:4000')
+const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
 
 export const getDataFiltered = async (from, to, storeCountryFilter) => {
     let data = await api.postFilter(new Date(from), new Date(to), storeCountryFilter)
