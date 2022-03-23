@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import './filter.css'
-import { getAllCountries, getAllStatus, getAllCenter, getAllStores, getTagsFiltered } from '../../Modules/api-functions';
+import { getAllCountries, getAllStatus, getAllCenter, getAllStores, getTagsFiltered, getAllFulfillmentStatus } from '../../Modules/api-functions';
 import ReactCountryFlag from "react-country-flag"
 
 const ITEM_HEIGHT = 100;
@@ -16,12 +16,12 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 350,
+      width: 380,
     },
   },
 };
 
-export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilter, setStatusFilter, setCenterFilter, setStoreFilter}) {
+export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilter, setStatusFilter, setCenterFilter, setStoreFilter, setFulfillmentStatusFilter}) {
   const [countryList, setCountryList] = useState([]);
   const [countryOptions, setCountryOptions] = useState([])
 
@@ -36,6 +36,9 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
 
   const [storeList, setStoreList] = useState([]);
   const [storeOptions, setStoreOptions] = useState([])
+
+  const [fulfillmentStatusList, setFulfillmentStatusList] = useState([]);
+  const [fulfillmentStatusOptions, setFulfillmentStatusOptions] = useState([])
 
   useEffect(() => {
     getAllCountries().then((data)=>{
@@ -62,6 +65,12 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
        setStoreOptions(oldArray=>[...oldArray, element.group])
       });
     })
+    getAllFulfillmentStatus().then((data)=>{
+      data.data.forEach(element => {
+       setFulfillmentStatusOptions(oldArray=>[...oldArray, element.group])
+      });
+    })
+
   }, []);
   
   const handleChange = (event) => {
@@ -90,10 +99,10 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
     const {
       target: { value },
     } = event;
-    setStatusFilter(value.length > 0 ? {
-      "tags": {
-        "$in": value
-      }
+    setTagsFilter(value.length > 0 ? {
+      "$and": value.map((value)=>{
+        return {"tags": new RegExp(value.trimStart(), "i")}
+      })
     }
     : 
     {
@@ -112,7 +121,7 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
     const {
       target: { value },
     } = event;
-    setTagsFilter(value.length > 0 ? {
+    setStatusFilter(value.length > 0 ? {
       "financial_status": {
         "$in": value
       }
@@ -180,9 +189,32 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
     );
   };
 
+  const handleFulfillmentStatusChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFulfillmentStatusFilter(value.length > 0 ? {
+      "line_items.fulfillment_status": {
+        "$in": value
+      }
+    }
+    : 
+    {
+      "line_items.fulfillment_status": {
+        "$nin": []
+      }
+    } 
+    )
+    setFulfillmentStatusList(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
   return (
+  
     <div className="filterBar">
-      <FormControl sx={{ m: 1.5, width: 230 }}>
+      <FormControl sx={{ m: 1.5, width: 190 }}>
         <InputLabel id="demo-multiple-checkbox-label">Market</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
@@ -205,7 +237,7 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
       </FormControl>
     
   
-      <FormControl sx={{ m: 1.5, width: 230 }}>
+      <FormControl sx={{ m: 1.5, width: 190 }}>
         <InputLabel id="demo-multiple-checkbox-label">Tags</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
@@ -227,15 +259,15 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
       </FormControl>
 
       
-      <FormControl sx={{ m: 1.5, width: 230 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Status</InputLabel>
+      <FormControl sx={{ m: 1.5, width: 190 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Financial Status</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={statusList}
           onChange={handleStatusChange}
-          input={<OutlinedInput label="Status" />}
+          input={<OutlinedInput label="Financial Status" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >
@@ -248,15 +280,15 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
         </Select>
       </FormControl> 
 
-      <FormControl sx={{ m: 1.5, width: 230 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Center</InputLabel>
+      <FormControl sx={{ m: 1.5, width: 190 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Fulfillment Center</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={centerList}
           onChange={handleCenterChange}
-          input={<OutlinedInput label="Center" />}
+          input={<OutlinedInput label="Fulfillment Center" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >
@@ -269,21 +301,42 @@ export default function MultipleSelectCheckmarks({setCountryFilter, setTagsFilte
         </Select>
       </FormControl> 
 
-      <FormControl sx={{ m: 1.5, width: 230 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Store(s)</InputLabel>
+      <FormControl sx={{ m: 1.5, width: 190 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Shopify Store</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={storeList}
           onChange={handleStoreChange}
-          input={<OutlinedInput label="Store(s)" />}
+          input={<OutlinedInput label="Shopify Store" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >
           {storeOptions.map((name, index) => (
             <MenuItem key={index} value={name}>
               <Checkbox checked={storeList.indexOf(name) > -1} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl> 
+
+      <FormControl sx={{ m: 1.5, width: 190 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Fulfillment status</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={fulfillmentStatusList}
+          onChange={handleFulfillmentStatusChange}
+          input={<OutlinedInput label="Fulfillment status" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {fulfillmentStatusOptions.map((name, index) => (
+            <MenuItem key={index} value={name}>
+              <Checkbox checked={fulfillmentStatusList.indexOf(name) > -1} />
               <ListItemText primary={name} />
             </MenuItem>
           ))}

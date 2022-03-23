@@ -67,8 +67,8 @@ const data = [
   }
 ];
 
-async function getWeekData(startDate, endDate){
-  const weekData = await getDataFiltered(endDate, startDate)
+async function getWeekData(startDate, endDate, storeFilter, countryFilter){
+  const weekData = await getDataFiltered(endDate, startDate, storeFilter, countryFilter)
   if(weekData && weekData.data && weekData.data.length > 1){
     let total = 0
     let weekDataFloship = 0
@@ -90,66 +90,74 @@ function weeks(number){
 
 
 const all7WeeksFromNow=[weeks(7), weeks(6), weeks(5), weeks(4), weeks(3), weeks(2), weeks(1)]
-const getAllWeeksData = all7WeeksFromNow.map((week)=>{return getWeekData(week[0], week[1])})
 
 
-export default function NgBarChart() {
-
+export default function NgBarChart(storeFilter, countryFilter) {
   const [weekData, setWeekData] = useState(data)
+  const [allWeeks, setAllWeeks] = useState(null)
+
+  useEffect(() => {
+    setAllWeeks(all7WeeksFromNow.map((week)=>{
+      return getWeekData(week[0], week[1], storeFilter, countryFilter)
+    }))
+  }, [storeFilter, countryFilter]);
 
  useEffect(() => {
-    Promise.all(getAllWeeksData).then((values)=>{
-      setWeekData(
-        [
-        {
-          name: `Week ${weekNumber(7)}`,
-          Floship: values[0][0],
-          Link: values[0][1],
-        },
-        {
-          name: `Week ${weekNumber(6)}`,
-          Floship: values[1][0],
-          Link: values[1][1],
-        },
-        {
-          name: `Week ${weekNumber(5)}`,
-          Floship: values[2][0],
-          Link: values[2][1],
-        },
-        {
-          name: `Week ${weekNumber(4)}`,
-          Floship: values[3][0],
-          Link: values[3][1],
-        },
-        {
-          name: `Week ${weekNumber(3)}`,
-          Floship: values[4][0],
-          Link: values[4][1],
-        },
-        {
-          name: `Week ${weekNumber(2)}`,
-          Floship: values[5][0],
-          Link: values[5][1],
-        },
-        {
-          name: `Week ${weekNumber(1)}`,
-          Floship: values[6][0],
-          Link: values[6][1],
-        }
-        ]
-      )
-    })
-  }, []); 
+   if (allWeeks !== null){
+      Promise.all(allWeeks).then((values)=>{
+        setWeekData(
+          [
+          {
+            name: `Week ${weekNumber(7)}`,
+            Floship: values[0][0],
+            Link: values[0][1],
+          },
+          {
+            name: `Week ${weekNumber(6)}`,
+            Floship: values[1][0],
+            Link: values[1][1],
+          },
+          {
+            name: `Week ${weekNumber(5)}`,
+            Floship: values[2][0],
+            Link: values[2][1],
+          },
+          {
+            name: `Week ${weekNumber(4)}`,
+            Floship: values[3][0],
+            Link: values[3][1],
+          },
+          {
+            name: `Week ${weekNumber(3)}`,
+            Floship: values[4][0],
+            Link: values[4][1],
+          },
+          {
+            name: `Week ${weekNumber(2)}`,
+            Floship: values[5][0],
+            Link: values[5][1],
+          },
+          {
+            name: `Week ${weekNumber(1)}`,
+            Floship: values[6][0],
+            Link: values[6][1],
+          }
+          ]
+        )
+      })
+    }
+  }, [allWeeks]); 
 
   return (
     <div className="barChart">
+        <em className="warningText">Beware: Only Store and Market filters work for this bar chart</em>
       <div>
         <h2>Weekly - Floship vs Link</h2>
       </div>
       <div>
         <BarChart
-          width={900}
-          height={400}
+          width={750}
+          height={350}
           data={weekData}
           margin={{
             top: 25,

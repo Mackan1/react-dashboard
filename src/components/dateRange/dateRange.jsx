@@ -37,7 +37,7 @@ function DateRange ({setDateRange}){
             moveRangeOnFirstSelection={false}
             months={1}
             weekStartsOn={1}
-            minDate= {new Date("January 1, 2022 00:00:00")}
+            minDate= {new Date("January 1, 2021 00:00:00")}
             maxDate= {new Date()}
             ranges={date}
             direction="vertical"

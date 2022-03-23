@@ -2,21 +2,39 @@ import axios from "axios";
 
 export class API {
     constructor(url){
-        console.log("Creating new API")
         this.url = url
     }
     getOptions(method, path){
-        console.log("Getting options")
         return {
             method: method,
             url: this.url+path,
         }
     }
-    async postFilter(to, from){
+    async postFilter(to, from, storeCountryFilter){
         let options = this.getOptions('post', '/postfilter')
-        options.data = {
+        options.data = [{
             to: to.toISOString(),
             from: from.toISOString()
+        }]
+        if(storeCountryFilter === undefined || storeCountryFilter.storeFilter === undefined){
+            options.data.push({
+                "store": {
+                        "$nin": []
+                    },
+                })
+        } else {
+            options.data.push(storeCountryFilter.storeFilter)
+        };
+        if( storeCountryFilter === undefined || storeCountryFilter.countryFilter === undefined){
+           
+            options.data.push({
+                "shipping_address.country_code": {
+                        "$nin": []
+                    },
+                })
+                
+        } else{
+            options.data.push(storeCountryFilter.countryFilter)
         }
         let orders = axios.request(options)
         return orders;
@@ -66,15 +84,21 @@ export class API {
         let orders = axios.request(options)
         return orders;
     }
+    async getFulfillmentStatus(){
+        let options = this.getOptions('get', '/fulfillmentStatus')
+        let orders = axios.request(options)
+        return orders;
+    }
 }
-export const getDataFiltered = async (from, to) => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
-    let data = await api.postFilter(new Date(from), new Date(to))
+
+const api = new API('http://localhost:4000')
+
+export const getDataFiltered = async (from, to, storeCountryFilter) => {
+    let data = await api.postFilter(new Date(from), new Date(to), storeCountryFilter)
     return data
 }
 
 export const getTagsFiltered = async (store) => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data;
     if(store){
        data = await api.postTagsFilter(store)
@@ -85,31 +109,31 @@ export const getTagsFiltered = async (store) => {
 }
 
 export const getAllCountries = async () => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data = await api.getCountries()
     return data
 }
 
 export const getAllTags = async () => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data = await api.getTags()
     return data
 }
 
 export const getAllStatus = async () => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data = await api.getStatus()
     return data
 }
 
 export const getAllCenter = async () => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data = await api.getCenter()
     return data
 }
 
 export const getAllStores = async () => {
-    const api = new API('https://ng-wh-dashboard-bs2ur3fy2q-uc.a.run.app')
     let data = await api.getStore()
+    return data
+}
+
+export const getAllFulfillmentStatus = async () => {
+    let data = await api.getFulfillmentStatus()
     return data
 }

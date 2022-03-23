@@ -14,20 +14,9 @@ import {
 import { getDataFiltered } from "../../Modules/api-functions";
 
 let todaysDate = new Date()
-
-
-// function monthNumber(minus){
-//   todaysDate = new Date()
-//   if(getMonth(subMonths(todaysDate, minus))< 1){
-//     todaysDate.setFullYear( todaysDate.getFullYear()-1)
-//     return 52 + (getISOWeek(new Date(), {weekStartsOn: 0, locale: "da-DK"})-week)
-//   } else {
-//     todaysDate.setFullYear( todaysDate.getFullYear())
-//     return getISOWeek(new Date(), {weekStartsOn: 0, locale: "da-DK"})-week
-//   }
-// }
-
-
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 const data = [
 
@@ -63,9 +52,10 @@ const data = [
   }
 ];
 
-async function getMonthData(startDate, endDate){
-  const monthData = await getDataFiltered(endDate, startDate)
-  console.log(monthData)
+const all6MonthsFromNow=[months(6), months(5), months(4), months(3), months(2), months(1)]
+
+async function getMonthData(startDate, endDate, storeFilter, countryFilter){
+  const monthData = await getDataFiltered(endDate, startDate, storeFilter, countryFilter)
   let total = 0
   let monthdataFloship = 0
   let monthdataLink = 0
@@ -86,63 +76,71 @@ function months(number){
 }
 
 
-const all6MonthsFromNow=[months(6), months(5), months(4), months(3), months(2), months(1)]
-const getAllMonthsData = all6MonthsFromNow.map((month)=>{return getMonthData(month[0], month[1])})
 
 
-export default function MonthBarChart() {
 
+
+export default function MonthBarChart(storeFilter, countryFilter) {
   const [monthData, setMonthData] = useState(data)
+  const [allMonths, setAllMonths] = useState(null)
+
+  useEffect(() => {
+      setAllMonths(all6MonthsFromNow.map((month)=>{
+        return getMonthData(month[0], month[1], storeFilter, countryFilter)
+      }))    
+  }, [storeFilter, countryFilter]);
 
  useEffect(() => {
-    Promise.all(getAllMonthsData).then((values)=>{
-      console.log(values)
-      setMonthData(
-        [
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 6))+1}`,
-          Floship: values[0][0],
-          Link: values[0][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 5))+1}`,
-          Floship: values[1][0],
-          Link: values[1][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 4))+1}`,
-          Floship: values[2][0],
-          Link: values[2][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 3))+1}`,
-          Floship: values[3][0],
-          Link: values[3][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 2))+1}`,
-          Floship: values[4][0],
-          Link: values[4][1],
-        },
-        {
-          name: `Month ${getMonth(subMonths(todaysDate, 1))+1}`,
-          Floship: values[5][0],
-          Link: values[5][1],
-        }
-        ]
-      )
-    })
-  }, []); 
+   if (allMonths !== null){
+    Promise.all(allMonths).then((values)=>{
+        setMonthData(
+          [
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 6))],
+            Floship: values[0][0],
+            Link: values[0][1],
+          },
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 5))],
+            Floship: values[1][0],
+            Link: values[1][1],
+          },
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 4))],
+            Floship: values[2][0],
+            Link: values[2][1],
+          },
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 3))],
+            Floship: values[3][0],
+            Link: values[3][1],
+          },
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 2))],
+            Floship: values[4][0],
+            Link: values[4][1],
+          },
+          {
+            name: monthNames[getMonth(subMonths(todaysDate, 1))],
+            Floship: values[5][0],
+            Link: values[5][1],
+          }
+          ]
+        )
+      })
+   }
+  }, [allMonths]); 
 
   return (
     <div className="barChart">
+      <em className="warningText">Beware: Only Store and Market filters work for this bar chart</em>
       <div>
         <h2>Monthly - Floship vs Link</h2>
       </div>
       <div>
         <BarChart
-          width={900}
-          height={400}
+          width={750}
+          height={350}
           data={monthData}
           margin={{
             top: 25,

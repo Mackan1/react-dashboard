@@ -1,7 +1,6 @@
 .floshipPieChart {
-  width: 650px;
-  margin: 20px 10px;
-  height: 500px;
+  width: 100%;
+  height: 650px;
   background-color: white;
   border-radius: 2rem;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -12,13 +11,7 @@
 
 }
 
-@media screen and (min-width: 1450px) {
-  .floshipPieChart {
-    min-width: 550px;
-    width: 45%;
-  }
-}
-
+/* 
 .pieChartTitle {
   position: relative;
   bottom: -40px;
@@ -36,4 +29,4 @@
   margin-top: 10px;
   font-size: 16px;
   font-weight: lighter;
-}
+} */

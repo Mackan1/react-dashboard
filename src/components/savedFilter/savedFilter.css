@@ -1,0 +1,27 @@
+.savedFilterBar {
+    margin-bottom: 10px;
+    height: 150px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 2rem;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.saveBox{
+    align-items: center;
+    justify-content: center;
+    width: 35%;
+    padding: 10px 0 10px 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.savedFiltersList{
+  display: flex;
+  width: 65%;
+  padding: 10px 30px;
+}
